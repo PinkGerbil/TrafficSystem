@@ -16,15 +16,11 @@ public class TrafficLightChange : MonoBehaviour
     public float YellowTimerLimit;
     public float GreenTimerLimit;
 
-    public bool RedLightActive = true;
-    public bool YellowLightActive = false;
-    public bool GreenLightActive = false;
+    public bool RedLightActive;
+    public bool YellowLightActive;
+    public bool GreenLightActive;
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    public int state;
 
     // Update is called once per frame
     void Update()
@@ -33,19 +29,7 @@ public class TrafficLightChange : MonoBehaviour
         YellowTimer += Time.deltaTime;
         GreenTimer += Time.deltaTime;
 
-        //if (Input.GetKeyDown(KeyCode.Alpha1))
-        //{
-        //    LightChangeToRed();
-        //}
-        //if (Input.GetKeyDown(KeyCode.Alpha2))
-        //{
-        //    LightChangeToYellow();
-        //}
-        //if (Input.GetKeyDown(KeyCode.Alpha3))
-        //{
-        //    LightChangeToGreen();
-        //}
-
+        CurrentLight(); 
 
         if(GreenTimer > GreenTimerLimit && GreenLightActive)
         {
@@ -90,5 +74,24 @@ public class TrafficLightChange : MonoBehaviour
         RedTimer = 0;
         YellowTimer = 0;
         GreenTimer = 0; 
+    }
+
+    public void CurrentLight()
+    {
+        if (RedLightActive)
+        {
+            //state 1
+            state = 1;
+        }
+        else if (YellowLightActive)
+        {
+            //state 2
+            state = 2;
+        }
+        else if (GreenLightActive)
+        {
+            //state 3
+            state = 3;
+        }
     }
 }
