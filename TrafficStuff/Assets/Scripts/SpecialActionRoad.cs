@@ -7,6 +7,7 @@ public class SpecialActionRoad : MonoBehaviour
     public bool UTurn;//state 1
     public bool LTurn;//state 2
     public bool TTurn;//state 3
+    public bool NormalRoad;//state 4
 
     public int state;
 
@@ -24,6 +25,10 @@ public class SpecialActionRoad : MonoBehaviour
         else if (TTurn)
         {
             state = 3;
+        }
+        else if (NormalRoad)
+        {
+            state = 4; 
         }
     }
 }

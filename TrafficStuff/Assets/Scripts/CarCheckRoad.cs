@@ -18,7 +18,7 @@ public class CarCheckRoad : MonoBehaviour
     void Update()
     {
         RaycastDetect();
-
+        TravelDirection(); 
         if (!isStopped)
         {
             transform.Translate(Vector3.forward / 5);
@@ -27,7 +27,22 @@ public class CarCheckRoad : MonoBehaviour
 
     private void TravelDirection()
     {
-
+        if (transform.rotation.y == 0)
+        {
+            DirectionOfTravel = 1;
+        }
+        else if (transform.rotation.y == 90 || transform.rotation.y == -270)
+        {
+            DirectionOfTravel = 2;
+        }
+        else if (transform.rotation.y == 180 || transform.rotation.y == -180)
+        {
+            DirectionOfTravel = 3;
+        }
+        else if (transform.rotation.y == 270 || transform.rotation.y == -90)
+        {
+            DirectionOfTravel = 4;
+        }
     }
     private void RaycastDetect()
     {
@@ -74,14 +89,91 @@ public class CarCheckRoad : MonoBehaviour
     {
         if(HitObject.collider.gameObject != TraversedObject)
         {
+            //if the road is a u turn
             if (HitObject.collider.gameObject.GetComponent<SpecialActionRoad>().state == 1)
             {
                 //u turn
                 transform.Rotate(new Vector3(0, 180, 0));
                 transform.Translate(-5, 0, 0);
+                TraversedObject = HitObject.collider.gameObject;
             }
+            //if the road is an L shaped turn
             else if(HitObject.collider.gameObject.GetComponent<SpecialActionRoad>().state == 2)
             {
+                if (HitObject.collider.gameObject.GetComponent<RoadTurns>().ReturnUpPath())
+                {
+                    //ignore direction of travel 1 & 3
+                    if (DirectionOfTravel == 2)
+                    {
+                        //turn left
+                        transform.Rotate(new Vector3(0, -90, 0));
+                        transform.Translate(5, 0, 0);
+                        return;
+                    }
+                    else if(DirectionOfTravel == 4)
+                    {
+                        //turn right
+                        transform.Rotate(new Vector3(0, 90, 0));
+                        transform.Translate(-5, 0, 0);
+                        return;
+                    }
+                }
+                else if (HitObject.collider.gameObject.GetComponent<RoadTurns>().ReturnRightPath())
+                {
+                    //ignore direction of travel 2 & 4
+                    if (DirectionOfTravel == 3)
+                    {
+                        //turn left
+                        transform.Rotate(new Vector3(0, -90, 0));
+                        transform.Translate(5, 0, 0);
+                        return;
+                    }
+                    else if (DirectionOfTravel == 1)
+                    {
+                        //turn right
+                        transform.Rotate(new Vector3(0, 90, 0));
+                        transform.Translate(-5, 0, 0);
+                        return;
+                    }
+                }
+                else if (HitObject.collider.gameObject.GetComponent<RoadTurns>().ReturnDownPath())
+                {
+                    //ignore direction of travel 1 & 3
+                    if (DirectionOfTravel == 4)
+                    {
+                        //turn left
+                        transform.Rotate(new Vector3(0, -90, 0));
+                        transform.Translate(5, 0, 0);
+                        return;
+                    }
+                    else if (DirectionOfTravel == 2)
+                    {
+                        //turn right
+                        transform.Rotate(new Vector3(0, 90, 0));
+                        transform.Translate(-5, 0, 0);
+                        return;
+                    }
+                }
+                else if (HitObject.collider.gameObject.GetComponent<RoadTurns>().ReturnLeftPath())
+                {
+                    //ignore direction of travel 2 & 4
+                    if (DirectionOfTravel == 1)
+                    {
+                        //turn left
+                        transform.Rotate(new Vector3(0, -90, 0));
+                        transform.Translate(5, 0, 0);
+                        return;
+                    }
+                    else if (DirectionOfTravel == 3)
+                    {
+                        //turn right
+                        transform.Rotate(new Vector3(0, 90, 0));
+                        transform.Translate(-5, 0, 0);
+                        return;
+                    }
+                }
+
+                TraversedObject = HitObject.collider.gameObject;
                 //L shaped turn
                 //
                 //    turn left
@@ -97,13 +189,21 @@ public class CarCheckRoad : MonoBehaviour
                 //
 
             }
+            //if the road is a T shape
+            //not in use as of now
             else if (HitObject.collider.gameObject.GetComponent<SpecialActionRoad>().state == 3)
             {
                 //T turn
+                TraversedObject = HitObject.collider.gameObject;
                 transform.Rotate(new Vector3(0, -90, 0));
                 transform.Translate(-5, 0, 0);
             }
-            TraversedObject = HitObject.collider.gameObject;
+            //if the road is straight with no turns
+            else if (HitObject.collider.gameObject.GetComponent<SpecialActionRoad>().state == 4)
+            {
+                //normal road
+                //TraversedObject = null; 
+            }
         }
     }
 }
